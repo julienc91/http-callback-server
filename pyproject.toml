@@ -5,7 +5,7 @@ exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:"]
 profile = "black"
 
 [tool.mypy]
-exclude = "tests/"
+exclude = 'test_.*\.py$'
 strict = true
 
 [tool.poetry]
@@ -19,12 +19,9 @@ python = "^3.7"
 requests = "^2.27"
 
 [tool.poetry.dev-dependencies]
-black = "*"
-isort = "*"
-mypy = "*"
+pre-commit = "*"
 pytest = "*"
 pytest-cov = "*"
-types-requests = "^2.27"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
