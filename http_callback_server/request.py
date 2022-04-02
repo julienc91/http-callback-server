@@ -7,6 +7,11 @@ from requests import Request
 def build_request_from_request_handler(
     request_handler: BaseHTTPRequestHandler,
 ) -> Request:
+    """
+    Builds a requests.Request object from a BaseHTTPRequestHandler object.
+    :param request_handler: The BaseHTTPRequestHandler object.
+    :return: A requests.Request object.
+    """
     host, port = request_handler.server.server_address
     parsed_url = urlparse(request_handler.path)
     return Request(
