@@ -1,4 +1,3 @@
-import threading
 from http.server import HTTPServer
 from typing import Any, Optional, Type
 
@@ -15,6 +14,7 @@ class Server(HTTPServer):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.callback_request: Optional[Request] = None
+        self._shutdown = False
 
     def set_callback_request(self, request: Request) -> None:
         """
@@ -27,9 +27,14 @@ class Server(HTTPServer):
         """
         Shutdown the server to allow the main process to continue.
         """
-        killer = threading.Thread(target=self.shutdown)
-        killer.daemon = True
-        killer.start()
+        self._shutdown = True
+
+    def is_active(self) -> bool:
+        """
+        Return whether the server should be shut down.
+        :return: bool: True if the server should continue, False if it should be shut down.
+        """
+        return not self._shutdown
 
 
 class CallbackServer:
@@ -68,5 +73,6 @@ class CallbackServer:
         Start the server and wait for the callback request.
         :return: the latest callback request.
         """
-        self._server.serve_forever()
+        while self._server.is_active():
+            self._server.handle_request()
         return self._server.callback_request
